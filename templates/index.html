@@ -1,0 +1,180 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="utf-8"> 
+    <title>Document Q & A Engine</title> 
+    <link rel = "stylesheet" type = "text/css" href="./../static/css/semantic.css">
+    <link rel = "stylesheet" type = "text/css" href="./../static/css/semantic.min.css">
+
+    
+    <script src="./../static/js/jquery-3.6.0.js"?></script>
+    <script src="./../static/js/semantic.js"></script>
+    <script src="./../static/js/jquery-migrate-1.4.1.js"></script>
+
+    <style type="text/css">
+
+    .center{
+        width: 60%; display: block; margin: 0 auto;
+        text-align: left;
+    }
+
+    .bottom{width: 100%;position: relative;bottom: 0;text-align: center;height: 10px;}
+
+    .inputfile {
+    z-index: 2;
+	/* width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1; */
+}
+    </style>
+
+
+</head>
+<body>
+
+	<div class='center'>
+        
+		<img src="./../static/img/banner.jpg" width="600" height="300" style="display: block; margin: 0 auto;">
+        <iframe id="frmFile" src = "../static/document_list.txt" style="display: none;"></iframe>
+
+        <div class="ui white sidebar vertical menu" style="width: auto;">
+            
+            {% if uploaded_document_list|length == 0 %}
+                <div class="item">
+                    You haven't uploaded any document yet.
+                </div>
+            {% endif %}
+
+            {% for file_name in uploaded_document_list %}
+                <div class="item">
+                    <i class="file icon" style="float: left;"></i>
+                    <a href="./../static/uploaded_documents/{{file_name}}">{{file_name}}</a>
+                </div>    
+            {% endfor %}
+
+
+        </div>
+
+        <div class="ui white big launch right attached fixed button" style="position: absolute; left:0px;top: 20px;" id="uploaded_documents">
+            <i class="content icon"></i>
+            <span class="text" >Documents</span>
+        </div>
+        
+        <div class style="float: right;">
+            <form method=post enctype=multipart/form-data>
+
+                <div class="ui white button" style="float: right;height: 48px;">
+                    <i class="ui upload icon"></i> 
+                    <input type=submit value="Upload document">
+                </div>
+
+                <div class="ui white button" style="float: right;height: 48px;">
+                    <input type="file" class="inputfile" name="file"/>
+                </div>
+
+            </form>
+        </div>
+
+
+        <form action="" method=post style="width: 50%;">
+            <!-- document search form -->
+
+                <div class="ui search" id= "search_form" style="padding-bottom: 15px;">
+                    <div class="field">
+                        <div class="ui input icon form">
+                            <input class ="prompt" type="text" placeholder="Search Your Document" name = "document" id="document_input" value = "{{qa_dict_list[-1].document}}" style="height: 48px;">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                </div>
+                
+        </form>
+
+        
+        <form action="" method=post>
+            <!-- question and ask form -->
+            <div class="ui form" id = "submit_form">
+                <div class = "field">
+                    <span> Please write down your question below.</span>
+                    <input type  = "text" placeholder = "When was GLG found  ? " name="question" id = "question_input" style="margin-top: 10px;">
+                </div>
+                <button class="ui button" style="margin-top: 10px;" type = submit value="submit_question" id = "ask_button">
+                    Ask
+                </button>
+            </div>
+        </form>
+
+
+
+
+        <!-- show the historical question and answer  -->
+        
+        <h4> Your Q & A History </h4>
+
+        <div class="ui styled fluid accordion">
+
+            <!-- Latest question and answer -->
+            <!-- question -->
+            <div class="title active">
+                <div class = "dropdown icon"></div>
+                {% if qa_dict_list[-1].question!='' %}
+                <p id = "latest_question"> Question: {{qa_dict_list[-1].question}}</p>
+                {% else %}
+                {% endif %}
+            </div>
+            <!-- docuement & Answer -->
+            <div class='content active'>
+
+                <p class="transition visible" style="display: block !important;"></p>
+                {% if qa_dict_list[-1].document!=''%}
+                <p id = "latest_document">Document: {{qa_dict_list[-1].document}} </p>
+                Answer: 
+                <p style="white-space:pre-wrap;" id = "latest_answer">{{qa_dict_list[-1].answer}}</p>
+                {% else %}
+                {% endif %}
+                
+            </div>
+
+        
+
+            <!-- historical questions and answers -->
+
+            {% for dict in qa_dict_list[:-1]|reverse %}
+                <!-- question -->
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <p>Question: {{dict.question}}</p>
+                </div>
+                <!-- document and answer -->
+                <div class="content">
+                    <p class="transition visible" style="display: block !important;">
+                    <p>Document: {{dict.document}}</p>
+                    Answer: 
+                    <p style="white-space: pre-wrap;">{{dict.answer}}</p>
+                </div>
+            {% endfor %}
+
+        </div>
+        
+        <div style="padding-top: 10px;padding-bottom: 10px;">
+                <button class="ui button" id = "clear">
+                    <a href="/clear">Clear History</a>
+                </button>
+        </div>
+
+
+
+	</div>
+	<div class='bottom'>
+	</div>
+</body>
+
+<script src="./../static/js/load_document_list.js"></script>
+<script src="./../static/js/interative_accordion.js"></script>
+<script src="./../static/js/submit_loading.js"></script>
+<script src="./../static/js/sidebar_show.js"></script>
+
+</html>
