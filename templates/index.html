@@ -133,12 +133,20 @@
                 <p id = "latest_document">Document: {{qa_dict_list[-1].document}} </p>
                 Answer: 
                 <p style="white-space:pre-wrap;" id = "latest_answer">{{qa_dict_list[-1].answer}}</p>
+                
+                <div style="border-top: 0.5px solid rgb(210, 200, 200);">
+                    <p>Are you satisfied with the answer ? </p>
+                    <i class ="thumbs up outline icon" id="thumbsup_icon" value = "upvote" style="padding: 10px;padding-right: 20px;">
+                    </i>
+
+                    <i class ="thumbs down outline icon" id="thumbsdown_icon" value = "downvote" style="padding: 10px;padding-left: 20px;">
+                    </i>
+                </div>
+
                 {% else %}
                 {% endif %}
-                
-            </div>
 
-        
+            </div>
 
             <!-- historical questions and answers -->
 
@@ -176,5 +184,6 @@
 <script src="./../static/js/interative_accordion.js"></script>
 <script src="./../static/js/submit_loading.js"></script>
 <script src="./../static/js/sidebar_show.js"></script>
+<script src="./../static/js/thumbs_updown.js"></script>
 
 </html>

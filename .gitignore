@@ -1,3 +1,4 @@
 .idea
 .ebextensitions
 .venv
+./log/*.json
