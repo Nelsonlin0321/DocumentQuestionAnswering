@@ -2,7 +2,7 @@
 
 A web application that allows user to upload txt documents and able to answer users' questions related to the uploaded documents based on fine-tuned ALBERT models.
 
-The web application is built on Flask framework and ALBERT models are built on pytorch framework using transformer libary.
+The web application is built on Flask framework with ALBERT models as a search engine built on pytorch framework using transformer libary.
 
 All required packages are listed on requirements.txt. Please follow below commands to create the virtual environment.
 
