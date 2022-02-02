@@ -12,6 +12,13 @@ python -m venv .vevn
 .venv\Scripts\activate
 
 pip install requirements.txt
+
+```
+
+Lauch the web application
+
+```bash
+python application.py
 ```
 
 For GPU environment, please follow the instruction (https://pytorch.org/get-started/locally/) to install pytorch-gpu compatible with your cuda.
