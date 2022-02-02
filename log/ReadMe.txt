@@ -1,1 +1,0 @@
-The folder to save user log

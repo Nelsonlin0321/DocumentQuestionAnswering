@@ -28,7 +28,15 @@
 	overflow: hidden;
 	position: absolute;
 	z-index: -1; */
-}
+    }
+
+    .header {
+        text-align: center;
+        display: block; margin: 0 auto;
+        padding-bottom:30px;
+        font-style: italic;
+        font-size: 20px;
+    }
     </style>
 
 
@@ -37,10 +45,13 @@
 
 	<div class='center'>
         
-		<img src="./../static/img/banner.jpg" width="600" height="300" style="display: block; margin: 0 auto;">
+        <div class = "header">
+            <img src="./../static/img/banner.jpg" width="600" height="300" style="display: block; margin: 0 auto;">
+            <span style="text-align: center;">A web application that allows user to upload txt documents and is able to answer users' questions related to the uploaded documents.</span>
+        </div>
         <iframe id="frmFile" src = "../static/document_list.txt" style="display: none;"></iframe>
 
-        <div class="ui white sidebar vertical menu" style="width: auto;">
+        <div class="ui white sidebar vertical menu" style="width: auto;position: absolute;">
             
             {% if uploaded_document_list|length == 0 %}
                 <div class="item">
@@ -77,29 +88,24 @@
 
             </form>
         </div>
-
-
-        <form action="" method=post style="width: 50%;">
+     
+        <form action="" method=post>
+            
             <!-- document search form -->
-
-                <div class="ui search" id= "search_form" style="padding-bottom: 15px;">
-                    <div class="field">
-                        <div class="ui input icon form">
-                            <input class ="prompt" type="text" placeholder="Search Your Document" name = "document" id="document_input" value = "{{qa_dict_list[-1].document}}" style="height: 48px;">
-                            <i class="search icon"></i>
-                        </div>
+            <div class="ui search" id= "search_form" style="padding-bottom: 15px;">
+                <div class="field">
+                    <div class="ui input icon form">
+                        <input class ="prompt" type="text" placeholder="Search Your Document" name = "document" id="document_input" value = "{{qa_dict_list[-1].document}}" style="height: 48px;">
+                        <i class="search icon"></i>
                     </div>
                 </div>
-                
-        </form>
+            </div>
 
-        
-        <form action="" method=post>
             <!-- question and ask form -->
             <div class="ui form" id = "submit_form">
                 <div class = "field">
                     <span> Please write down your question below.</span>
-                    <input type  = "text" placeholder = "When was GLG found  ? " name="question" id = "question_input" style="margin-top: 10px;">
+                    <input type  = "text" placeholder = "Example: How much did Apple earn per share in 2022 first quarter ? " name="question" id = "question_input" style="margin-top: 10px;">
                 </div>
                 <button class="ui button" style="margin-top: 10px;" type = submit value="submit_question" id = "ask_button">
                     Ask

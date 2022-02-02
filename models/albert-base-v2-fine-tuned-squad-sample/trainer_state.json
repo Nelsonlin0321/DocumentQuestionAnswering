@@ -1,0 +1,44 @@
+{
+  "best_metric": 1.0819028615951538,
+  "best_model_checkpoint": "/content/drive/My Drive/Colab Notebooks/Models/SQUADModels/Albert/checkpoint-1200",
+  "epoch": 0.9925558312655087,
+  "global_step": 1200,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 0.5,
+      "learning_rate": 1.5037220843672458e-05,
+      "loss": 1.4747,
+      "step": 600
+    },
+    {
+      "epoch": 0.5,
+      "eval_loss": 1.198399543762207,
+      "eval_runtime": 73.6996,
+      "eval_samples_per_second": 13.582,
+      "eval_steps_per_second": 1.14,
+      "step": 600
+    },
+    {
+      "epoch": 0.99,
+      "learning_rate": 1.0074441687344914e-05,
+      "loss": 1.071,
+      "step": 1200
+    },
+    {
+      "epoch": 0.99,
+      "eval_loss": 1.0819028615951538,
+      "eval_runtime": 75.1778,
+      "eval_samples_per_second": 13.315,
+      "eval_steps_per_second": 1.117,
+      "step": 1200
+    }
+  ],
+  "max_steps": 2418,
+  "num_train_epochs": 2,
+  "total_flos": 318006765158400.0,
+  "trial_name": null,
+  "trial_params": null
+}

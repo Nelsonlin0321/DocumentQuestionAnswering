@@ -2,3 +2,4 @@
 .ebextensitions
 .venv
 ./log/*.json
+/notebooks/.ipynb_checkpoints/
