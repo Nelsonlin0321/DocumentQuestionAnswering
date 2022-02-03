@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 
-def read_qnli_data(file_name, data_dir=data_config.qnli_training_data_path):
+def read_qnli_data(file_name, data_dir=r"E:\MyFiles\WorkSpace\Data\QNLIv2\QNLI"):
     path = os.path.join(data_dir, file_name)
     with open(path, encoding='utf-8-sig') as f:
         text = f.readlines()
@@ -23,12 +23,18 @@ def read_qnli_data(file_name, data_dir=data_config.qnli_training_data_path):
     return df
 
 
-def get_qnli_pandas_dataframe():
-    qnli_train_df = read_qnli_data("train.tsv")
-    qnli_dev_df = read_qnli_data("dev.tsv")
+def get_qnli_pandas_dataframe(data_dir=data_config.qnli_training_data_path):
+    qnli_train_df = read_qnli_data("train.tsv",data_dir)
+    qnli_dev_df = read_qnli_data("dev.tsv",data_dir)
     qnli_train_df['label'] = np.where(
         qnli_train_df['label'] == 'entailment', 1, 0)
     qnli_dev_df['label'] = np.where(qnli_dev_df['label'] == 'entailment', 1, 0)
+
+    qnli_dev_df['question'] = qnli_dev_df['question'].apply(lambda x: x.strip())
+    qnli_dev_df['sentence'] = qnli_dev_df['sentence'].apply(lambda x: x.strip()) 
+
+    qnli_train_df['question'] = qnli_train_df['question'].apply(lambda x: x.strip())
+    qnli_train_df['sentence'] = qnli_train_df['sentence'].apply(lambda x: x.strip()) 
 
     return qnli_dev_df, qnli_train_df
 
@@ -144,6 +150,12 @@ def get_squad_v2_pandas_dataframe(squad_v2_dir=data_config.squadv2_training_data
     if not include_impossible:
         train_data_df = train_data_df[train_data_df['is_impossible'] == False]
         dev_data_df = dev_data_df[dev_data_df['is_impossible'] == False]
+
+    train_data_df['question'] = train_data_df['question'].apply(lambda x: x.strip())
+    train_data_df['context'] = train_data_df['context'].apply(lambda x: x.strip()) 
+
+    dev_data_df['question'] = dev_data_df['question'].apply(lambda x: x.strip())
+    dev_data_df['context'] = dev_data_df['context'].apply(lambda x: x.strip()) 
 
     return train_data_df, dev_data_df
 
