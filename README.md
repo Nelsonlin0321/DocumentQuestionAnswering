@@ -1,4 +1,4 @@
-# Document Question Answering Application
+# Document-Based Question And Answering With Hierarchical Search Using Fine-Tuned AlBERT Models
 
 A web application that allows user to upload txt documents and able to answer users' questions related to the uploaded documents based on fine-tuned ALBERT models.
 
@@ -23,4 +23,10 @@ python application.py
 
 For GPU environment, please follow the instruction (https://pytorch.org/get-started/locally/) to install pytorch-gpu compatible with your cuda.
 
+### Web UI
+
 <img src="./WebUI.png" alt="WebUI.png" style="width: 800px;"/>
+
+### Project Architecture
+
+<img src="./architecture.png" alt="WebUI.png" style="width: 800px;"/>
