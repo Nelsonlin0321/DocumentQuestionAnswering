@@ -1,6 +1,13 @@
 
+class document_selection_model_config():
+    model_path = r"./models/twin-albert-for-long-text-pair-classification/pytorch_model.bin"
+    model_dir = r"./models/twin-albert-for-long-text-pair-classification/"
+    batch_size = 12
+    doc_overlap_length = 32
+
+
 class sentence_selection_model_config():
-    model_path = r"./models/albert-base-v2-fine-tuned-qnli-sample"
+    model_path = r"./models/albert-base-v2-fine-tuned-qnli-sample/checkpoint-2100"
     max_length = 512
     batch_size = 12
 

@@ -8,6 +8,8 @@ from project_modules.models import SentenceSelectionModelLoader
 from project_modules.config import sentence_selection_model_config
 from project_modules.models import AnswerRetrievalModelLoader
 from project_modules.config import answer_retrieval_model_config
+from project_modules.config import document_selection_model_config
+from project_modules.models import DocumentSelectionModelLoader, TwinAlBerts
 from project_modules.utils import read_document_dict
 from project_modules.predictions import main_predict
 
@@ -31,6 +33,11 @@ qa_dict_list = [
      'question': '',
      'answer': ''},
 ]
+
+"""Loading Models"""
+
+document_selection_model = DocumentSelectionModelLoader(
+    document_selection_model_config)
 sentence_selection_model = SentenceSelectionModelLoader(
     sentence_selection_model_config)
 document_dict = read_document_dict(UPLOAD_FOLDER)
@@ -83,7 +90,7 @@ def home_page():
         print("Input question:", question)
         if question:
             document, answer = main_predict(
-                question, document, document_dict, sentence_selection_model, answer_retrieval_model, answer_retrieval_threshold)
+                question, document, document_dict, document_selection_model, sentence_selection_model, answer_retrieval_model, answer_retrieval_threshold)
 
             answer = answer.capitalize()
 

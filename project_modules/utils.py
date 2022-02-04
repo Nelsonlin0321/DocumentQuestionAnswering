@@ -9,6 +9,7 @@ import json
 import random
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from textblob import TextBlob
 
 
 def read_qnli_data(file_name, data_dir=r"E:\MyFiles\WorkSpace\Data\QNLIv2\QNLI"):
@@ -24,26 +25,66 @@ def read_qnli_data(file_name, data_dir=r"E:\MyFiles\WorkSpace\Data\QNLIv2\QNLI")
 
 
 def get_qnli_pandas_dataframe(data_dir=data_config.qnli_training_data_path):
-    qnli_train_df = read_qnli_data("train.tsv",data_dir)
-    qnli_dev_df = read_qnli_data("dev.tsv",data_dir)
+    qnli_train_df = read_qnli_data("train.tsv", data_dir)
+    qnli_dev_df = read_qnli_data("dev.tsv", data_dir)
     qnli_train_df['label'] = np.where(
         qnli_train_df['label'] == 'entailment', 1, 0)
     qnli_dev_df['label'] = np.where(qnli_dev_df['label'] == 'entailment', 1, 0)
 
-    qnli_dev_df['question'] = qnli_dev_df['question'].apply(lambda x: x.strip())
-    qnli_dev_df['sentence'] = qnli_dev_df['sentence'].apply(lambda x: x.strip()) 
+    qnli_dev_df['question'] = qnli_dev_df['question'].apply(
+        lambda x: x.strip())
+    qnli_dev_df['sentence'] = qnli_dev_df['sentence'].apply(
+        lambda x: x.strip())
 
-    qnli_train_df['question'] = qnli_train_df['question'].apply(lambda x: x.strip())
-    qnli_train_df['sentence'] = qnli_train_df['sentence'].apply(lambda x: x.strip()) 
+    qnli_train_df['question'] = qnli_train_df['question'].apply(
+        lambda x: x.strip())
+    qnli_train_df['sentence'] = qnli_train_df['sentence'].apply(
+        lambda x: x.strip())
 
     return qnli_dev_df, qnli_train_df
+
+
+def split_context_to_list(context, sentence_len=60):
+
+    blob = TextBlob(context)
+    final_sentence_list = []
+    accumulate_len = 0
+    windows_sentences = []
+    for sentence in blob.sentences:
+
+        word_len = len(sentence.words)
+        if accumulate_len+word_len <= sentence_len:
+            if not sentence.endswith("."):
+                windows_sentences.append(str(sentence)+". ")
+            else:
+                windows_sentences.append(str(sentence))
+            accumulate_len += word_len
+        else:
+            windows_sentence = " ".join(windows_sentences)
+            final_sentence_list.append(windows_sentence)
+            windows_sentences = [str(sentence)]
+            accumulate_len = word_len
+
+    if len(windows_sentences) > 0:
+        windows_sentence = " ".join(windows_sentences)
+        final_sentence_list.append(windows_sentence)
+
+    return final_sentence_list
 
 
 def read_document_to_list(document_path):
     with open(document_path, encoding='utf-8-sig') as f:
         document = f.readlines()
-        sentence_list = [line.strip()
-                         for line in document if len(line.strip()) != 0]
+        raw_sentence_list = [line.strip()
+                             for line in document if len(line.strip()) != 0]
+
+        raw_sentence_list = [
+            line+"." if not line.endswith(".") else line for line in raw_sentence_list]
+
+        context = " ".join(raw_sentence_list)
+
+        sentence_list = split_context_to_list(context, sentence_len=60)
+
         return sentence_list
 
 
@@ -151,11 +192,14 @@ def get_squad_v2_pandas_dataframe(squad_v2_dir=data_config.squadv2_training_data
         train_data_df = train_data_df[train_data_df['is_impossible'] == False]
         dev_data_df = dev_data_df[dev_data_df['is_impossible'] == False]
 
-    train_data_df['question'] = train_data_df['question'].apply(lambda x: x.strip())
-    train_data_df['context'] = train_data_df['context'].apply(lambda x: x.strip()) 
+    train_data_df['question'] = train_data_df['question'].apply(
+        lambda x: x.strip())
+    train_data_df['context'] = train_data_df['context'].apply(
+        lambda x: x.strip())
 
-    dev_data_df['question'] = dev_data_df['question'].apply(lambda x: x.strip())
-    dev_data_df['context'] = dev_data_df['context'].apply(lambda x: x.strip()) 
+    dev_data_df['question'] = dev_data_df['question'].apply(
+        lambda x: x.strip())
+    dev_data_df['context'] = dev_data_df['context'].apply(lambda x: x.strip())
 
     return train_data_df, dev_data_df
 

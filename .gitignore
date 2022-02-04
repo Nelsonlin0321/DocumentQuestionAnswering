@@ -3,3 +3,4 @@
 .venv
 ./log/*.json
 /notebooks/.ipynb_checkpoints/
+/models/albert-base-v2-fine-tuned-qnli-sample/checkpoint-2100.zip

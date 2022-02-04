@@ -3,6 +3,10 @@ import torch
 from transformers import AutoTokenizer
 from project_modules.datasets import TextPairsDataset
 from torch.utils.data import DataLoader
+from transformers.modeling_outputs import SequenceClassifierOutput
+from transformers import AlbertModel
+from project_modules.datasets import prepare_dataframe
+from project_modules.datasets import LongTextPairDataSet
 
 
 class SentenceSelectionModelLoader(object):
@@ -22,7 +26,7 @@ class SentenceSelectionModelLoader(object):
 
         self.batch_size = model_config.batch_size
 
-    def prediction_from_loader(self, model, data_loader):
+    def predict_from_loader(self, model, data_loader):
 
         pred_list = []
         prob_list = []
@@ -62,7 +66,7 @@ class SentenceSelectionModelLoader(object):
         predict_datasets_loader = DataLoader(
             predict_datasets, batch_size=self.batch_size, shuffle=False)
 
-        return self.prediction_from_loader(self.model, predict_datasets_loader)
+        return self.predict_from_loader(self.model, predict_datasets_loader)
 
 
 class AnswerRetrievalModelLoader(object):
@@ -88,7 +92,7 @@ class AnswerRetrievalModelLoader(object):
 
         self.cls_token_id = self.tokenizer.cls_token_id
 
-    def prediction_from_loader(self, model, data_loader):
+    def predict_from_loader(self, model, data_loader):
 
         final_result_list = []
 
@@ -171,4 +175,100 @@ class AnswerRetrievalModelLoader(object):
         predict_datasets_loader = DataLoader(
             predict_datasets, batch_size=self.batch_size, shuffle=False)
 
-        return self.prediction_from_loader(self.model, predict_datasets_loader)
+        return self.predict_from_loader(self.model, predict_datasets_loader)
+
+
+class TwinAlBerts(torch.nn.Module):
+    def __init__(self, model_config):
+
+        super(TwinAlBerts, self).__init__()
+
+        self.albert_layer_1 = AlbertModel.from_pretrained(
+            model_config.model_name)
+        self.albert_layer_2 = AlbertModel.from_pretrained(
+            model_config.model_name)
+
+        self.pre_classifier = torch.nn.Linear(768*2, 768)
+
+        self.dropout = torch.nn.Dropout(0.3)
+
+        self.classifer = torch.nn.Linear(768, model_config.num_class)
+
+        self.loss_fct = torch.nn.CrossEntropyLoss()
+
+    def forward(self, token_inputs_1, token_inputs_2, labels=None):
+
+        albert_outputs_1 = self.albert_layer_1(**token_inputs_1)
+        albert_outputs_2 = self.albert_layer_2(**token_inputs_2)
+
+        pooler_output_1 = albert_outputs_1.pooler_output
+
+        pooler_output_2 = albert_outputs_2.pooler_output
+
+        concat_pooler = torch.cat([pooler_output_1, pooler_output_2], axis=1)
+
+        concat_pooler = self.pre_classifier(concat_pooler)
+
+        concat_pooler = self.dropout(concat_pooler)
+
+        logits = self.classifer(concat_pooler)
+
+        loss = None
+        if labels is not None:
+            loss = self.loss_fct(logits, labels)
+
+        return SequenceClassifierOutput(
+            loss=loss,
+            logits=logits,
+            hidden_states=None,
+            attentions=None,
+        )
+
+
+class DocumentSelectionModelLoader(object):
+    def __init__(self, model_config):
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        self.model = torch.load(model_config.model_path).to(self.device)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(model_config.model_dir)
+
+        self.batch_size = model_config.batch_size
+
+        self.doc_overlap_length = model_config.doc_overlap_length
+
+    def predict_from_loader(self, model, data_loader):
+        pred_list = []
+        prob_list = []
+
+        model.eval()
+
+        for sample in data_loader:
+
+            with torch.no_grad():
+                outputs = model(**sample)
+
+                logits = outputs.logits
+                probs = torch.sigmoid(logits)
+
+                pred = torch.argmax(logits, axis=1)
+                pred = pred.detach().cpu().numpy()
+                pred_list.extend(pred)
+
+                prob = probs[:, 1]
+                prob = prob.detach().cpu().numpy()
+                prob_list.extend(prob)
+
+        return {'pred': pred_list, 'prob': prob_list}
+
+    def predict(self, question, context_list):
+        tokens_left_df, tokens_right_df = prepare_dataframe(
+            question, context_list, self.tokenizer, self.doc_overlap_length)
+
+        long_text_pair_dataset = LongTextPairDataSet(
+            tokens_left_df, tokens_right_df, device=self.device)
+
+        predict_datasets_loader = DataLoader(
+            long_text_pair_dataset, batch_size=self.batch_size, shuffle=False)
+
+        return self.predict_from_loader(self.model, predict_datasets_loader)
