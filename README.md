@@ -1,4 +1,4 @@
-### Project Catalog
+### Project Introduction
 
 <img src="./project_catalog.png" alt="project_catalog.png" style="width: 800px;"/>
 
