@@ -35,6 +35,14 @@ For GPU environment, please follow the instruction (https://pytorch.org/get-star
 
 <img src="./WebUI.png" alt="WebUI.png" style="width: 800px;"/>
 
+### Project Catalog
+
+<img src="./project_catalog.png" alt="project_catalog.png" style="width: 800px;"/>
+
 ### Project Architecture
 
-<img src="./architecture.png" alt="WebUI.png" style="width: 800px;"/>
+<img src="./architecture.png" alt="./architecture.png" style="width: 800px;"/>
+
+### Twins-alberts for long-text document searching
+
+<img src="./twins-alberts.png" alt="./twins-alberts.png" style="width: 800px;"/>
