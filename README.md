@@ -1,4 +1,6 @@
-# Document-Based Question And Answering With Hierarchical Search Using Fine-Tuned AlBERT Models
+### Project Catalog
+
+<img src="./project_catalog.png" alt="project_catalog.png" style="width: 800px;"/>
 
 A web application that allows user to upload txt documents and able to answer users' questions related to the uploaded documents based on fine-tuned ALBERT models.
 
@@ -34,10 +36,6 @@ For GPU environment, please follow the instruction (https://pytorch.org/get-star
 ### Web UI
 
 <img src="./WebUI.png" alt="WebUI.png" style="width: 800px;"/>
-
-### Project Catalog
-
-<img src="./project_catalog.png" alt="project_catalog.png" style="width: 800px;"/>
 
 ### Project Architecture
 
