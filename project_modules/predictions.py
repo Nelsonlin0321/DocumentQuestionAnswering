@@ -109,7 +109,7 @@ def predict_answer(question, pred_df, answer_retrieval_model, answer_retrieval_t
 
 def main_predict(question, document, document_dict, document_selection_model, sentence_selection_model, answer_retrieval_model, answer_retrieval_threshold=15):
 
-    default_document = "Unknow Document"
+    default_document = ""
     default_answer = "Sorry, we couldn't find any document related to your question. "
     unfound_answer = "Sorry, we couldn't find any answer for this question in this document: {}"
 

@@ -89,6 +89,9 @@ def home_page():
 
         print("Input question:", question)
         if question:
+            
+            document_dict = read_document_dict(UPLOAD_FOLDER)
+
             document, answer = main_predict(
                 question, document, document_dict, document_selection_model, sentence_selection_model, answer_retrieval_model, answer_retrieval_threshold)
 
