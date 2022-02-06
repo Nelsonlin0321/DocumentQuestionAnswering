@@ -229,7 +229,7 @@ class DocumentSelectionModelLoader(object):
     def __init__(self, model_config):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        self.model = torch.load(model_config.model_path).to(self.device)
+        self.model = torch.load(model_config.model_path,map_location=self.device).to(self.device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_config.model_dir)
 
