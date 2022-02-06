@@ -74,7 +74,7 @@
             <span class="text" >Documents</span>
         </div>
         
-        <div class style="float: right;">
+        <div class style="padding-bottom: 20px;">
             <form method=post enctype=multipart/form-data>
 
                 <div class="ui white button" style="float: right;height: 48px;">
@@ -82,7 +82,7 @@
                     <input type=submit value="Upload document">
                 </div>
 
-                <div class="ui white button" style="float: right;height: 48px;">
+                <div class="ui white button" style="height: 48px;">
                     <input type="file" class="inputfile" name="file"/>
                 </div>
 
@@ -92,7 +92,7 @@
         <form action="" method=post>
             
             <!-- document search form -->
-            <div class="ui search" id= "search_form" style="padding-bottom: 15px;z-index: -1;">
+            <div class="ui search" id= "search_form" style="padding-bottom: 15px;width: auto;">
                 <div class="field">
                     <div class="ui input icon form">
                         <input class ="prompt" type="text" placeholder="Search Your Document" name = "document" id="document_input" value = "{{qa_dict_list[-1].document}}" style="height: 48px;">
